@@ -30,7 +30,7 @@ impl Note {
     /// * `content` - The content of the note, must be non-empty and up to 1000 characters.
     /// # Returns
     /// A new `Note` instance with the current UTC timestamp.
-    /// /// # Examples
+    /// # Examples
     /// ```
     /// let note = Note::create(
     ///     String::from("My First Note"),
@@ -68,15 +68,15 @@ impl Note {
     }
 
     /// Creates a new `Note` instance from primitive values.
-    /// /// # Arguments
+    /// # Arguments
     /// * `id` - The unique identifier for the note, can be `None` for new notes.
     /// * `title` - The title of the note, must be non-empty and up to 100 characters.
     /// * `content` - The content of the note, must be non-empty and up to 1000 characters.
     /// * `created_at` - The timestamp of when the note was created, typically set to the current UTC time.
     /// * `updated_at` - The timestamp of when the note was last updated, typically set to the current UTC time.
-    /// /// # Returns
+    /// # Returns
     /// A new `Note` instance with the provided values.
-    /// /// # Examples
+    /// # Examples
     /// ```
     /// let note = Note::from_primitives(
     ///    1,
@@ -210,7 +210,7 @@ impl Note {
     }
 
     /// Set the ID of the note.
-    /// /// # Arguments
+    /// # Arguments
     /// * `value` - The new ID for the note, must be a valid i64.
     /// # Examples
     /// ```
@@ -225,7 +225,7 @@ impl Note {
     /// This method is typically used when the note is created or updated in a database.
     /// It sets the `id` field to the provided value.
     /// It is important to ensure that the ID is unique within the context of the application.
-    /// ///
+    ///
     /// # Panics
     /// This method will panic if the provided value is not a valid i64.
     /// It is important to ensure that the ID meets the constraints of the application.
@@ -315,7 +315,7 @@ impl Note {
     /// note.set_updated_at(new_time);
     /// assert_eq!(note.get_updated_at(), new_time);
     /// ```
-    /// /// # Note
+    /// # Note
     /// This method is typically used to update the `updated_at` field when the note is modified.
     /// It sets the `updated_at` field to the provided value.
     pub fn set_updated_at(&mut self, value: DateTime<Utc>) {

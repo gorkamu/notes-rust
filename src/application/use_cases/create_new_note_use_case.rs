@@ -5,11 +5,35 @@ pub struct CreateNewNoteUseCase {
     note_repository: NoteRepository,
 }
 
+///
+/// The `CreateNewNoteUseCase` struct provides a use case for creating a new note.
+/// It encapsulates the logic for creating a note and interacting with the `NoteRepository`.
+/// 
 impl CreateNewNoteUseCase {
+    /// 
+    /// Creates a new instance of `CreateNewNoteUseCase`.
+    /// # Arguments
+    /// * `note_repository`: An instance of `NoteRepository` to interact with the note storage.
+    /// # Returns
+    /// A new `CreateNewNoteUseCase` instance.
+    /// # Example
+    /// ```
+    /// let note_repository = NoteRepository::new();
+    /// let create_use_case = CreateNewNoteUseCase::new(note_repository);
+    /// ```
+    /// 
     pub fn new(note_repository: NoteRepository) -> Self {
         CreateNewNoteUseCase { note_repository }
     }
 
+    /// 
+    /// Executes the use case to create a new note.
+    /// # Arguments
+    /// * `title`: The title of the note to be created.
+    /// * `content`: The content of the note to be created.
+    /// # Returns
+    /// A `Result` containing the created `Note` on success, or an error message on failure.    
+    /// 
     pub fn execute(&self, title: String, content: String) -> Result<Note, String> {
         let mut note = Note::create(title, content);
 

@@ -5,11 +5,33 @@ pub struct UpdateNoteUseCase {
     note_repository: NoteRepository,
 }
 
+///
+/// The `UpdateNoteUseCase` struct provides a use case for updating an existing note.
+/// It interacts with the `NoteRepository` to perform the update operation and handle any errors related to the note's existence or input validation.
+/// This use case is part of the application layer, which orchestrates the interaction between the domain entities and the user interface or other application components.
+///
 impl UpdateNoteUseCase {
+    /// 
+    /// Creates a new instance of `UpdateNoteUseCase`.
+    /// # Arguments
+    /// * `note_repository`: An instance of `NoteRepository` to interact with the note storage.
+    /// # Returns
+    /// A new `UpdateNoteUseCase` instance.
+    /// 
     pub fn new(note_repository: NoteRepository) -> Self {
         UpdateNoteUseCase { note_repository }
     }
 
+    /// 
+    /// Executes the use case to update a note.
+    /// # Arguments
+    /// * `id`: The ID of the note to be updated.
+    /// * `title`: The new title for the note.
+    /// * `content`: The new content for the note.
+    /// # Returns
+    /// * `Ok(Note)`: If the note is successfully updated.
+    /// * `Err(String)`: If there is an error during the update process, such as invalid input or note not found.
+    /// 
     pub fn execute(&self, id: i64, title: String, content: String) -> Result<Note, String> {
         if id <= 0 {
             return Err("Invalid note ID".to_string());
