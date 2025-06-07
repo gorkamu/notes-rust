@@ -17,7 +17,7 @@ impl FindByIdNoteUseCase {
 
         match self.note_repository.find_by_id(id) {
             Some(note) => {
-                println!("[+] Note found with id: {}", id);
+                println!("[+] Note: {:?}", note);
                 Ok(note)
             }
             None => Err(format!("Note with id {} not found", id)),

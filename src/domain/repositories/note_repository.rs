@@ -49,7 +49,7 @@ impl NoteRepository {
         Ok(id)
     }
 
-    pub fn update(&self, note: &Note) -> Result<(), String> {
+    pub fn update(&self, note: Note) -> Result<Note, String> {
         self.connection
             .execute(
                 "UPDATE notes SET title = ?1, content = ?2, updated_at = CURRENT_TIMESTAMP WHERE id = ?3",
@@ -61,8 +61,8 @@ impl NoteRepository {
             )
             .map_err(|err| format!("Error al actualizar la nota: {}", err))?;
 
-        println!("[+] Updated note in SQLite: {:?}", note);
-        Ok(())
+        println!("[+] Updated note in SQLite: {:?}", note.get_id());
+        Ok(note.clone())
     }
 
     pub fn delete(&self, id: i64) -> Result<(), String> {
@@ -70,10 +70,8 @@ impl NoteRepository {
             .execute("DELETE FROM notes WHERE id = ?1", params![id])
             .map_err(|err| format!("Error al eliminar la nota: {}", err))?;
 
-        println!("[+] Deleted note with ID: {}", id);
         Ok(())
     }
-
 
     pub fn find_by_id(&self, id: i64) -> Option<Note> {
         let mut stmt = self
@@ -121,11 +119,11 @@ impl NoteRepository {
 
         match result {
             Some(note) => {
-                println!("Found note with ID {}: {:?}", id, note);
+                println!("Found note with id: {}", id);
                 Some(note)
             }
             _ => {
-                println!("No note found with ID: {}", id);
+                println!("No note found with id: {}", id);
                 None
             }
         }
