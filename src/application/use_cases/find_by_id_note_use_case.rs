@@ -1,8 +1,8 @@
 use crate::domain::entities::note::Note;
 use crate::domain::repositories::note_repository::NoteRepository;
 
-pub struct FindByIdNoteUseCase {
-    note_repository: NoteRepository,
+pub struct FindByIdNoteUseCase<'a> {
+    note_repository: &'a NoteRepository,
 }
 
 ///
@@ -11,7 +11,7 @@ pub struct FindByIdNoteUseCase {
 ///
 /// This use case is part of the application layer, which orchestrates the interaction between the domain entities and the user interface or other application components.
 ///
-impl FindByIdNoteUseCase {
+impl<'a> FindByIdNoteUseCase<'a> {
     /// 
     /// Creates a new instance of `FindByIdNoteUseCase`.
     /// # Arguments
@@ -19,7 +19,7 @@ impl FindByIdNoteUseCase {
     /// # Returns
     /// A new instance of `FindByIdNoteUseCase`.    
     /// 
-    pub fn new(note_repository: NoteRepository) -> Self {
+    pub fn new(note_repository: &'a NoteRepository) -> Self {
         FindByIdNoteUseCase { note_repository }
     }
 

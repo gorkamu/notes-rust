@@ -188,4 +188,74 @@ impl NoteRepository {
             }
         }
     }
+
+    ///
+    /// Finds a note by its title in the SQLite database.
+    /// # Arguments
+    /// * `title`: The title of the note to be found.
+    /// # Returns
+    /// * `Option<Note>`: An `Option` containing the `Note` if found, or `None` if no note with the given title exists.
+    /// ///
+    /// This function performs a case-insensitive search for the title in the notes table.
+    /// It uses a SQL query with a `LIKE` clause to match the title, allowing for partial matches.
+    /// If a note with the specified title is found, it returns the note wrapped in `Some(Note)`.
+    /// If no note is found, it returns `None`.
+    /// 
+    pub fn find_by_title(&self, title: &str) -> Option<Note> {
+        let mut stmt = self
+            .connection
+            .prepare(
+                "SELECT 
+                        id,
+                        title, 
+                        content,
+                        created_at,
+                        updated_at
+                    FROM notes 
+                    WHERE title like '%' || ?1 || '%'
+                    LIMIT 1;",
+            )
+            .map_err(|err| format!("Error al preparar la consulta: {}", err))
+            .ok()?;
+
+        let result = stmt
+            .query_row(params![title], |row| {
+                let id: i64 = row.get(0)?;
+                let title: String = row.get(1)?;
+                let content: String = row.get(2)?;
+                let created_at: String = row.get(3)?;
+                let updated_at: String = row.get(4)?;
+
+                let updated_at_date = updated_at.parse::<DateTime<Utc>>()
+                    .map_err(|_| format!("Error parsing updated_at: {}", updated_at))
+                    .unwrap_or_else(|_| Utc::now());
+                let created_at_date = created_at.parse::<DateTime<Utc>>()
+                    .map_err(|_| format!("Error parsing created_at: {}", created_at))
+                    .unwrap_or_else(|_| Utc::now());
+
+                    
+                Ok(Note {
+                        id: Option::Some(id),
+                        title: title,
+                        content: content,
+                        created_at: created_at_date,
+                        updated_at: updated_at_date,
+                    })
+            })
+            .map_err(|err| format!("Error al buscar la nota por título: {}", err))
+            .ok();
+
+        match result {
+            Some(note) => {
+                println!("Found note with title: {}", title);
+                Some(note)
+            }
+            _ => {
+                println!("No note found with title: {}", title);
+                None
+            }
+        }
+    }
+
+
 }

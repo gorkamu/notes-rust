@@ -1,15 +1,15 @@
 use crate::domain::entities::note::Note;
 use crate::domain::repositories::note_repository::NoteRepository;
 
-pub struct CreateNewNoteUseCase {
-    note_repository: NoteRepository,
+pub struct CreateNewNoteUseCase<'a>  {
+    note_repository: &'a NoteRepository,
 }
 
 ///
 /// The `CreateNewNoteUseCase` struct provides a use case for creating a new note.
 /// It encapsulates the logic for creating a note and interacting with the `NoteRepository`.
 /// 
-impl CreateNewNoteUseCase {
+impl <'a> CreateNewNoteUseCase<'a>  {
     /// 
     /// Creates a new instance of `CreateNewNoteUseCase`.
     /// # Arguments
@@ -22,7 +22,7 @@ impl CreateNewNoteUseCase {
     /// let create_use_case = CreateNewNoteUseCase::new(note_repository);
     /// ```
     /// 
-    pub fn new(note_repository: NoteRepository) -> Self {
+    pub fn new(note_repository: &'a NoteRepository) -> Self {
         CreateNewNoteUseCase { note_repository }
     }
 
@@ -34,7 +34,7 @@ impl CreateNewNoteUseCase {
     /// # Returns
     /// A `Result` containing the created `Note` on success, or an error message on failure.    
     /// 
-    pub fn execute(&self, title: String, content: String) -> Result<Note, String> {
+    pub fn execute(&self, title: &String, content: &String) -> Result<Note, String> {
         let mut note = Note::create(title, content);
 
         let id: i64 = self

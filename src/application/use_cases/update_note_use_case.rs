@@ -1,8 +1,8 @@
 use crate::domain::entities::note::Note;
 use crate::domain::repositories::note_repository::NoteRepository;
 
-pub struct UpdateNoteUseCase {
-    note_repository: NoteRepository,
+pub struct UpdateNoteUseCase<'a> {
+    note_repository: &'a NoteRepository,
 }
 
 ///
@@ -10,7 +10,7 @@ pub struct UpdateNoteUseCase {
 /// It interacts with the `NoteRepository` to perform the update operation and handle any errors related to the note's existence or input validation.
 /// This use case is part of the application layer, which orchestrates the interaction between the domain entities and the user interface or other application components.
 ///
-impl UpdateNoteUseCase {
+impl<'a> UpdateNoteUseCase<'a> {
     /// 
     /// Creates a new instance of `UpdateNoteUseCase`.
     /// # Arguments
@@ -18,7 +18,7 @@ impl UpdateNoteUseCase {
     /// # Returns
     /// A new `UpdateNoteUseCase` instance.
     /// 
-    pub fn new(note_repository: NoteRepository) -> Self {
+    pub fn new(note_repository: &'a NoteRepository) -> Self {
         UpdateNoteUseCase { note_repository }
     }
 
@@ -32,7 +32,7 @@ impl UpdateNoteUseCase {
     /// * `Ok(Note)`: If the note is successfully updated.
     /// * `Err(String)`: If there is an error during the update process, such as invalid input or note not found.
     /// 
-    pub fn execute(&self, id: i64, title: String, content: String) -> Result<Note, String> {
+    pub fn execute(&self, id: i64, title: &String, content: &String) -> Result<Note, String> {
         if id <= 0 {
             return Err("Invalid note ID".to_string());
         }
@@ -57,8 +57,8 @@ impl UpdateNoteUseCase {
             None => return Err(format!("Note with id {} not found", id)),
         };
 
-        note.set_title(title);
-        note.set_content(content);      
+        note.set_title(title.clone());
+        note.set_content(content.clone());      
         note.set_updated_at(
             chrono::Utc::now(),
         );  

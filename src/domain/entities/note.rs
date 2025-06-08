@@ -41,7 +41,7 @@ impl Note {
     /// ```
     /// # Errors
     /// Panics if the title is empty, exceeds 100 characters, or if the content is empty or exceeds 1000 characters.
-    pub fn create(title: String, content: String) -> Self {
+    pub fn create(title: &String, content: &String) -> Self {
         if title.is_empty() {
             panic!("Title cannot be empty");
         }
@@ -60,8 +60,8 @@ impl Note {
 
         Note {
             id: None,
-            title,
-            content,
+            title: title.clone(),
+            content: content.clone(),
             created_at: Utc::now(),
             updated_at: Utc::now(),
         }
