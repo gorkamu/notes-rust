@@ -1,7 +1,6 @@
-use crate::domain::entities::note::Note;
-use crate::domain::repositories::note_repository::NoteRepository;
+use crate::domain::{entities::note::Note, repositories::note_repository::NoteRepository};
 
-pub struct CreateNewNoteUseCase<'a>  {
+pub struct CreateNewNote<'a>  {
     note_repository: &'a NoteRepository,
 }
 
@@ -9,7 +8,7 @@ pub struct CreateNewNoteUseCase<'a>  {
 /// The `CreateNewNoteUseCase` struct provides a use case for creating a new note.
 /// It encapsulates the logic for creating a note and interacting with the `NoteRepository`.
 /// 
-impl <'a> CreateNewNoteUseCase<'a>  {
+impl <'a> CreateNewNote<'a>  {
     /// 
     /// Creates a new instance of `CreateNewNoteUseCase`.
     /// # Arguments
@@ -23,7 +22,7 @@ impl <'a> CreateNewNoteUseCase<'a>  {
     /// ```
     /// 
     pub fn new(note_repository: &'a NoteRepository) -> Self {
-        CreateNewNoteUseCase { note_repository }
+        CreateNewNote { note_repository }
     }
 
     /// 

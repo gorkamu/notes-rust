@@ -1,7 +1,7 @@
 use crate::domain::entities::note::Note;
 use crate::domain::repositories::note_repository::NoteRepository;
 
-pub struct UpdateNoteUseCase<'a> {
+pub struct UpdateNote<'a> {
     note_repository: &'a NoteRepository,
 }
 
@@ -10,7 +10,7 @@ pub struct UpdateNoteUseCase<'a> {
 /// It interacts with the `NoteRepository` to perform the update operation and handle any errors related to the note's existence or input validation.
 /// This use case is part of the application layer, which orchestrates the interaction between the domain entities and the user interface or other application components.
 ///
-impl<'a> UpdateNoteUseCase<'a> {
+impl<'a> UpdateNote<'a> {
     /// 
     /// Creates a new instance of `UpdateNoteUseCase`.
     /// # Arguments
@@ -19,7 +19,7 @@ impl<'a> UpdateNoteUseCase<'a> {
     /// A new `UpdateNoteUseCase` instance.
     /// 
     pub fn new(note_repository: &'a NoteRepository) -> Self {
-        UpdateNoteUseCase { note_repository }
+        UpdateNote { note_repository }
     }
 
     /// 

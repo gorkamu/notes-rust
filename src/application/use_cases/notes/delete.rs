@@ -1,7 +1,6 @@
-use crate::domain::entities::note::Note;
-use crate::domain::repositories::note_repository::NoteRepository;
+use crate::domain::{entities::note::Note, repositories::note_repository::NoteRepository};
 
-pub struct DeletedNoteUseCase<'a> {
+pub struct DeletedNote<'a> {
     note_repository: &'a NoteRepository,
 }
 
@@ -11,7 +10,7 @@ pub struct DeletedNoteUseCase<'a> {
 /// This use case is responsible for validating the input and ensuring that the note exists before attempting to delete it.
 /// It also handles any errors that may occur during the deletion process, such as invalid input or note not found.
 ///
-impl<'a> DeletedNoteUseCase<'a> {
+impl<'a> DeletedNote<'a> {
     /// 
     /// Creates a new instance of `DeletedNoteUseCase`.
     /// # Arguments
@@ -20,7 +19,7 @@ impl<'a> DeletedNoteUseCase<'a> {
     /// A new `DeletedNoteUseCase` instance.
     /// 
     pub fn new(note_repository: &'a NoteRepository) -> Self {
-        DeletedNoteUseCase { note_repository }
+        DeletedNote { note_repository }
     }
 
     ///
