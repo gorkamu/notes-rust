@@ -86,6 +86,59 @@ impl NoteRepository {
         Ok(id)
     }
 
+    pub fn find_all(&self) -> Option<Vec<Note>> {
+        let mut stmt = self
+            .connection
+            .prepare(
+                "SELECT 
+                        id,
+                        title, 
+                        content,
+                        created_at,
+                        updated_at
+                    FROM notes;",
+            )
+            .map_err(|err| format!("Error al preparar la consulta: {}", err))
+            .ok()?;
+
+        let notes = stmt
+            .query_map([], |row| {
+                let id: i64 = row.get(0)?;
+                let title: String = row.get(1)?;
+                let content: String = row.get(2)?;
+                let created_at: String = row.get(3)?;
+                let updated_at: String = row.get(4)?;
+
+                let updated_at_date = updated_at.parse::<DateTime<Utc>>()
+                    .map_err(|_| format!("Error parsing updated_at: {}", updated_at))
+                    .unwrap_or_else(|_| Utc::now());
+                let created_at_date = created_at.parse::<DateTime<Utc>>()
+                    .map_err(|_| format!("Error parsing created_at: {}", created_at))
+                    .unwrap_or_else(|_| Utc::now());
+
+                    
+                Ok(Note {
+                        id: Option::Some(id),
+                        title: title,
+                        content: content,
+                        created_at: created_at_date,
+                        updated_at: updated_at_date,
+                    })
+            })
+            .map_err(|err| format!("Error al buscar las notas: {}", err))
+            .ok()?;
+
+        let notes_vec: Vec<Note> = notes.filter_map(Result::ok).collect();
+
+        if notes_vec.is_empty() {
+            // println!("No notes found.");
+            None
+        } else {
+            // println!("[+] Found {} notes in SQLite", notes_vec.len());
+            Some(notes_vec)
+        }
+    }
+
     /// 
     /// Updates an existing note in the SQLite database.
     /// # Arguments

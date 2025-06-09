@@ -5,4 +5,5 @@ edition = "2024"
 
 [dependencies]
 chrono = "0.4"
+inquire = { version = "0.7.5", features = ["editor"] }
 rusqlite = { version = "0.36", features = ["bundled"] }
