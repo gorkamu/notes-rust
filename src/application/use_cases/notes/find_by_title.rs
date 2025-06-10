@@ -37,7 +37,7 @@ impl<'a> FindByTitle<'a> {
     /// * `title`: A reference to a `String` containing the title of the notes to be found. Must not be empty.
     /// 
     /// # Returns
-    /// A `Result` containing the found `Note` if successful, or an error message if no notes are found or the title is invalid.
+    /// A `Result` containing a vector of found `Note` objects if successful, or an error message if no notes are found or the title is invalid.
     /// 
     /// # Errors
     /// * Returns an error if the `title` is empty.
@@ -47,22 +47,19 @@ impl<'a> FindByTitle<'a> {
     /// ```
     /// let title = String::from("Meeting Notes");
     /// match find_by_title_use_case.execute(&title) {
-    ///     Ok(note) => println!("Found note: {:?}", note),
-    ///     Err(err) => println!("Failed to find note: {}", err),
+    ///     Ok(notes) => println!("Found notes: {:?}", notes),
+    ///     Err(err) => println!("Failed to find notes: {}", err),
     /// }
     /// ```
     /// 
-    pub fn execute(&self, title: &String) -> Result<Note, String> {
+    pub fn execute(&self, title: &String) -> Result<Vec<Note>, String> {
         if title.is_empty() {
             return Err("Title cannot be empty".to_string());
         }
 
         match self.note_repository.find_by_title(&title) {
-            Some(note) => {
-                println!("[+] Note: {:?}", note);
-                Ok(note)
-            }
-            None => Err(format!("Note with title `{:?}` not found", &title)),
+            Some(notes) => Ok(notes),
+            None => Err(format!("No notes found with title containing `{:?}`", &title)),
         }
     }
 }

@@ -35,7 +35,6 @@ impl DeletedNoteAction {
 
         // Extract the id from the selected note
         let id_str = selected_note.split(" - ").next().unwrap_or_default();
-        println!("Selected note ID: {}", id_str);
 
         let id: i64 = match id_str.parse() {
             Ok(parsed_id) => parsed_id,

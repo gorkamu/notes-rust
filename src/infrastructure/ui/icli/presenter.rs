@@ -2,7 +2,7 @@ use inquire::{
     error::InquireResult, ui::{Color, RenderConfig, Styled}, Confirm, Editor, InquireError, Select, Text
 };
 
-use crate::infrastructure::ui::icli::actions::notes::{create::CreateNoteAction, delete::DeletedNoteAction};
+use crate::infrastructure::ui::icli::actions::notes::{create::CreateNoteAction, delete::DeletedNoteAction, find::FindNoteAction};
 
 enum ActionOptions {
     Create,
@@ -34,7 +34,7 @@ impl Presenter {
             Ok(choice) => {
                 match self.map_choice_to_action(choice, &options) {
                     Some(ActionOptions::Create) => CreateNoteAction::execute(),
-                    Some(ActionOptions::Find) => false,
+                    Some(ActionOptions::Find) => FindNoteAction::execute(),
                     Some(ActionOptions::Update) => false,
                     Some(ActionOptions::Delete) => DeletedNoteAction::execute(),
                     None => false,

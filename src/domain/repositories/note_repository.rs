@@ -232,29 +232,27 @@ impl NoteRepository {
 
         match result {
             Some(note) => {
-                println!("Found note with id: {}", id);
                 Some(note)
             }
             _ => {
-                println!("No note found with id: {}", id);
                 None
             }
         }
     }
 
     ///
-    /// Finds a note by its title in the SQLite database.
+    /// Finds notes by their title in the SQLite database.
     /// # Arguments
-    /// * `title`: The title of the note to be found.
+    /// * `title`: The title or partial title of the notes to be found.
     /// # Returns
-    /// * `Option<Note>`: An `Option` containing the `Note` if found, or `None` if no note with the given title exists.
-    /// ///
+    /// * `Option<Vec<Note>>`: An `Option` containing a vector of `Note` objects if found, or `None` if no notes match the given title.
+    ///
     /// This function performs a case-insensitive search for the title in the notes table.
     /// It uses a SQL query with a `LIKE` clause to match the title, allowing for partial matches.
-    /// If a note with the specified title is found, it returns the note wrapped in `Some(Note)`.
-    /// If no note is found, it returns `None`.
-    /// 
-    pub fn find_by_title(&self, title: &str) -> Option<Note> {
+    /// If notes with the specified title are found, it returns them wrapped in `Some(Vec<Note>)`.
+    /// If no notes are found, it returns `None`.
+    ///
+    pub fn find_by_title(&self, title: &str) -> Option<Vec<Note>> {
         let mut stmt = self
             .connection
             .prepare(
@@ -265,14 +263,13 @@ impl NoteRepository {
                         created_at,
                         updated_at
                     FROM notes 
-                    WHERE title like '%' || ?1 || '%'
-                    LIMIT 1;",
+                    WHERE title LIKE '%' || ?1 || '%';",
             )
             .map_err(|err| format!("Error al preparar la consulta: {}", err))
             .ok()?;
 
-        let result = stmt
-            .query_row(params![title], |row| {
+        let notes = stmt
+            .query_map(params![title], |row| {
                 let id: i64 = row.get(0)?;
                 let title: String = row.get(1)?;
                 let content: String = row.get(2)?;
@@ -286,29 +283,23 @@ impl NoteRepository {
                     .map_err(|_| format!("Error parsing created_at: {}", created_at))
                     .unwrap_or_else(|_| Utc::now());
 
-                    
                 Ok(Note {
-                        id: Option::Some(id),
-                        title: title,
-                        content: content,
-                        created_at: created_at_date,
-                        updated_at: updated_at_date,
-                    })
+                    id: Option::Some(id),
+                    title: title,
+                    content: content,
+                    created_at: created_at_date,
+                    updated_at: updated_at_date,
+                })
             })
-            .map_err(|err| format!("Error al buscar la nota por título: {}", err))
-            .ok();
+            .map_err(|err| format!("Error al buscar las notas por título: {}", err))
+            .ok()?;
 
-        match result {
-            Some(note) => {
-                println!("Found note with title: {}", title);
-                Some(note)
-            }
-            _ => {
-                println!("No note found with title: {}", title);
-                None
-            }
+        let notes_vec: Vec<Note> = notes.filter_map(Result::ok).collect();
+
+        if notes_vec.is_empty() {
+            None
+        } else {
+            Some(notes_vec)
         }
     }
-
-
 }
