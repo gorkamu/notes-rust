@@ -1,5 +1,5 @@
 [package]
-name = "notas"
+name = "notes-r-ust"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,3 +7,4 @@ edition = "2024"
 chrono = "0.4"
 inquire = { version = "0.7.5", features = ["editor"] }
 rusqlite = { version = "0.36", features = ["bundled"] }
+ansi_term = "0.12"

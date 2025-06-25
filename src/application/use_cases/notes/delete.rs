@@ -1,4 +1,5 @@
 use crate::domain::{entities::note::Note, repositories::note_repository::NoteRepository};
+use ansi_term::Colour;
 
 pub struct DeletedNote<'a> {
     note_repository: &'a NoteRepository,
@@ -11,35 +12,35 @@ pub struct DeletedNote<'a> {
 /// that may occur during the deletion process, such as invalid input or database errors.
 ///
 impl<'a> DeletedNote<'a> {
-    /// 
+    ///
     /// Creates a new instance of `DeletedNote`.
-    /// 
+    ///
     /// # Arguments
     /// * `note_repository`: A reference to an instance of `NoteRepository` to interact with the note storage.
-    /// 
+    ///
     /// # Returns
     /// A new `DeletedNote` instance.
-    /// 
+    ///
     /// # Example
     /// ```
     /// let note_repository = NoteRepository::new();
     /// let delete_use_case = DeletedNote::new(&note_repository);
     /// ```
-    /// 
+    ///
     pub fn new(note_repository: &'a NoteRepository) -> Self {
         DeletedNote { note_repository }
     }
 
     ///
     /// Executes the use case to delete a note.
-    /// 
+    ///
     /// # Arguments
     /// * `id`: The ID of the note to be deleted. Must be greater than 0.
-    /// 
+    ///
     /// # Returns
     /// * `Ok(())`: If the note is successfully deleted.
     /// * `Err(String)`: If there is an error during the deletion process, such as invalid input or note not found.
-    /// 
+    ///
     /// # Example
     /// ```
     /// let id = 1; // ID of the note to delete
@@ -48,7 +49,7 @@ impl<'a> DeletedNote<'a> {
     ///     Err(err) => println!("Failed to delete note: {}", err),
     /// }
     /// ```
-    /// 
+    ///
     pub fn execute(&self, id: i64) -> Result<(), String> {
         if id <= 0 {
             return Err("Invalid note ID".to_string());
@@ -56,7 +57,11 @@ impl<'a> DeletedNote<'a> {
 
         match self.note_repository.delete(id) {
             Ok(()) => {
-                println!("[+] Deleted Note: {}", id);
+                println!(
+                    "{} Deleted note with id: {}",
+                    Colour::Green.paint(">"),
+                    Colour::Blue.paint(id.to_string())
+                );
                 Ok(())
             }
             Err(err) => Err(err),

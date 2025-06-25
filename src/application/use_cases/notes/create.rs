@@ -1,6 +1,7 @@
 use crate::domain::{entities::note::Note, repositories::note_repository::NoteRepository};
+use ansi_term::Colour;
 
-pub struct CreateNewNote<'a>  {
+pub struct CreateNewNote<'a> {
     note_repository: &'a NoteRepository,
 }
 
@@ -9,35 +10,35 @@ pub struct CreateNewNote<'a>  {
 /// It encapsulates the logic for creating a note and interacting with the `NoteRepository`.
 ///
 impl<'a> CreateNewNote<'a> {
-    /// 
+    ///
     /// Creates a new instance of `CreateNewNote`.
-    /// 
+    ///
     /// # Arguments
     /// * `note_repository`: A reference to an instance of `NoteRepository` to interact with the note storage.
-    /// 
+    ///
     /// # Returns
     /// A new `CreateNewNote` instance.
-    /// 
+    ///
     /// # Example
     /// ```
     /// let note_repository = NoteRepository::new();
     /// let create_use_case = CreateNewNote::new(&note_repository);
     /// ```
-    /// 
+    ///
     pub fn new(note_repository: &'a NoteRepository) -> Self {
         CreateNewNote { note_repository }
     }
 
-    /// 
+    ///
     /// Executes the use case to create a new note.
-    /// 
+    ///
     /// # Arguments
     /// * `title`: A reference to a `String` containing the title of the note to be created.
     /// * `content`: A reference to a `String` containing the content of the note to be created.
-    /// 
+    ///
     /// # Returns
     /// A `Result` containing the created `Note` on success, or an error message on failure.
-    /// 
+    ///
     /// # Example
     /// ```
     /// let title = String::from("My Note");
@@ -48,7 +49,7 @@ impl<'a> CreateNewNote<'a> {
     ///     Err(err) => println!("Failed to create note: {}", err),
     /// }
     /// ```
-    /// 
+    ///
     pub fn execute(&self, title: &String, content: &String) -> Result<Note, String> {
         let mut note = Note::create(title, content);
 
@@ -57,7 +58,11 @@ impl<'a> CreateNewNote<'a> {
             .save(&note)
             .map_err(|e| e.to_string())?;
 
-        println!("[+] Note created with id: '{}'", id);
+        println!(
+            "{} Created note with id: {}",
+            Colour::Green.paint(">"),
+            Colour::Blue.paint(id.to_string())
+        );
 
         note.set_id(id);
 

@@ -1,0 +1,38 @@
+# Archivos generados por Cargo
+/target/
+**/*.rs.bk
+
+# Archivos de configuración de IDE
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Archivos de compilación
+*.rlib
+*.d
+*.o
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Archivos de caché
+.cargo/
+Cargo.lock
+
+# Archivos temporales
+*.tmp
+*.temp
+*.log
+
+# Archivos de prueba
+/tests/
+
+# Ignorar archivos de base de datos SQLite
+*.sqlite
+*.db
+
+# Ignorar el contenido del directorio data, pero no el directorio en sí
+data/*
+!data/.gitkeep

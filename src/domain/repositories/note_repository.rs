@@ -81,7 +81,6 @@ impl NoteRepository {
             .map_err(|err| format!("Error al guardar la nota: {}", err))?;
 
         let id = self.connection.last_insert_rowid();
-        println!("[+] Saved note to SQLite: {:?} (id: {})", note, id);
 
         Ok(id)
     }
@@ -131,10 +130,8 @@ impl NoteRepository {
         let notes_vec: Vec<Note> = notes.filter_map(Result::ok).collect();
 
         if notes_vec.is_empty() {
-            // println!("No notes found.");
             None
         } else {
-            // println!("[+] Found {} notes in SQLite", notes_vec.len());
             Some(notes_vec)
         }
     }
@@ -158,8 +155,6 @@ impl NoteRepository {
                 ],
             )
             .map_err(|err| format!("Error al actualizar la nota: {}", err))?;
-
-        println!("[+] Updated note in SQLite: {:?}", note.get_id());
         Ok(note.clone())
     }
 

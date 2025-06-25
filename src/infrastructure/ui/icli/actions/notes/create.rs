@@ -1,16 +1,22 @@
-use inquire::{ui::{Color, RenderConfig, Styled}, Confirm, Editor, Text};
-
-use crate::{application::use_cases::notes::create::CreateNewNote, domain::repositories::note_repository::NoteRepository};
+use crate::{
+    application::use_cases::notes::create::CreateNewNote,
+    domain::repositories::note_repository::NoteRepository,
+};
+use ansi_term::Colour;
+use inquire::{
+    Confirm, Editor, Text,
+    ui::{Color, RenderConfig, Styled},
+};
 
 /// Represents the action of creating a new note through the CLI.
 pub struct CreateNoteAction;
 
 impl CreateNoteAction {
     /// Executes the process of creating a new note.
-    /// 
+    ///
     /// This method prompts the user for the note's title and content, confirms the action,
     /// and then attempts to save the note using the application logic.
-    /// 
+    ///
     /// # Returns
     /// - `true` if the note was successfully created.
     /// - `false` if the process was canceled or an error occurred.
@@ -19,7 +25,11 @@ impl CreateNoteAction {
         let title = match title {
             Ok(title) => title,
             Err(_) => {
-                println!("An error occurred when asking for the title, try again later.");
+                println!(
+                    "{} An error occurred when asking for the title, try again later",
+                    Colour::Red.paint(">")
+                );
+
                 return false;
             }
         };
@@ -43,17 +53,17 @@ impl CreateNoteAction {
         let content = match content {
             Ok(content) => content,
             Err(_) => {
-                println!("An error occurred when asking for the content, try again later.");
+                println!(
+                    "{} An error occurred when asking for the content, try again later",
+                    Colour::Red.paint(">")
+                );
                 return false;
             }
         };
 
-        let confirm = Confirm::new("Save")
-            .with_default(false)
-            .prompt().unwrap();
+        let confirm = Confirm::new("Save").with_default(false).prompt().unwrap();
 
         if !confirm {
-            println!("Note creation canceled.");
             return false;
         }
 
@@ -63,10 +73,10 @@ impl CreateNoteAction {
     }
 
     /// Creates a new note using the provided title and content.
-    /// 
+    ///
     /// This method interacts with the `NoteRepository` and the `CreateNewNote` use case
     /// to persist the note.
-    /// 
+    ///
     /// # Arguments
     /// - `title`: The title of the note.
     /// - `content`: The content of the note.
@@ -75,15 +85,15 @@ impl CreateNoteAction {
         let create_use_case: CreateNewNote = CreateNewNote::new(&note_repository);
 
         if let Err(err) = create_use_case.execute(&title, &content) {
-            println!("Failed to create note: {}", err);
+            println!("{} Failed to create note: {}", Colour::Red.paint(">"), err);
         }
     }
 
     /// Provides a custom render configuration for the description editor.
-    /// 
+    ///
     /// This configuration customizes the appearance of the editor's prompt
     /// when the user cancels the input.
-    /// 
+    ///
     /// # Returns
     /// A `RenderConfig` instance with the desired customization.
     fn description_render_config() -> RenderConfig<'static> {
